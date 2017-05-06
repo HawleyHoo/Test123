@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		39B274301EBC236C0038E3B6 /* UIViewController+AssociatedObjects.m in Sources */ = {isa = PBXBuildFile; fileRef = 39B2742F1EBC236C0038E3B6 /* UIViewController+AssociatedObjects.m */; };
+		39B274331EBC49EF0038E3B6 /* HYTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 39B274321EBC49EF0038E3B6 /* HYTextField.m */; };
+		39B274361EBC709E0038E3B6 /* ElfinsArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 39B274351EBC709E0038E3B6 /* ElfinsArray.m */; };
 		39C64A341EB1F6E80040F338 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 39C64A331EB1F6E80040F338 /* main.m */; };
 		39C64A371EB1F6E80040F338 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 39C64A361EB1F6E80040F338 /* AppDelegate.m */; };
 		39C64A3A1EB1F6E80040F338 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39C64A391EB1F6E80040F338 /* ViewController.m */; };
@@ -35,6 +38,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		39B2742E1EBC236C0038E3B6 /* UIViewController+AssociatedObjects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+AssociatedObjects.h"; sourceTree = "<group>"; };
+		39B2742F1EBC236C0038E3B6 /* UIViewController+AssociatedObjects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+AssociatedObjects.m"; sourceTree = "<group>"; };
+		39B274311EBC49EF0038E3B6 /* HYTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYTextField.h; sourceTree = "<group>"; };
+		39B274321EBC49EF0038E3B6 /* HYTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYTextField.m; sourceTree = "<group>"; };
+		39B274341EBC709E0038E3B6 /* ElfinsArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElfinsArray.h; sourceTree = "<group>"; };
+		39B274351EBC709E0038E3B6 /* ElfinsArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ElfinsArray.m; sourceTree = "<group>"; };
 		39C64A2F1EB1F6E80040F338 /* Test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Test.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		39C64A331EB1F6E80040F338 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		39C64A351EB1F6E80040F338 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -103,8 +112,14 @@
 			children = (
 				39C64A351EB1F6E80040F338 /* AppDelegate.h */,
 				39C64A361EB1F6E80040F338 /* AppDelegate.m */,
+				39B274311EBC49EF0038E3B6 /* HYTextField.h */,
+				39B274321EBC49EF0038E3B6 /* HYTextField.m */,
+				39B274341EBC709E0038E3B6 /* ElfinsArray.h */,
+				39B274351EBC709E0038E3B6 /* ElfinsArray.m */,
 				39C64A381EB1F6E80040F338 /* ViewController.h */,
 				39C64A391EB1F6E80040F338 /* ViewController.m */,
+				39B2742E1EBC236C0038E3B6 /* UIViewController+AssociatedObjects.h */,
+				39B2742F1EBC236C0038E3B6 /* UIViewController+AssociatedObjects.m */,
 				39C64A3B1EB1F6E80040F338 /* Main.storyboard */,
 				39C64A3E1EB1F6E90040F338 /* Assets.xcassets */,
 				39C64A401EB1F6E90040F338 /* LaunchScreen.storyboard */,
@@ -276,7 +291,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39B274361EBC709E0038E3B6 /* ElfinsArray.m in Sources */,
+				39B274331EBC49EF0038E3B6 /* HYTextField.m in Sources */,
 				39C64A3A1EB1F6E80040F338 /* ViewController.m in Sources */,
+				39B274301EBC236C0038E3B6 /* UIViewController+AssociatedObjects.m in Sources */,
 				39C64A371EB1F6E80040F338 /* AppDelegate.m in Sources */,
 				39C64A341EB1F6E80040F338 /* main.m in Sources */,
 			);
@@ -516,6 +534,7 @@
 				39C64A5E1EB1F6E90040F338 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		39C64A5F1EB1F6E90040F338 /* Build configuration list for PBXNativeTarget "TestTests" */ = {
 			isa = XCConfigurationList;
@@ -524,6 +543,7 @@
 				39C64A611EB1F6E90040F338 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		39C64A621EB1F6E90040F338 /* Build configuration list for PBXNativeTarget "TestUITests" */ = {
 			isa = XCConfigurationList;
@@ -532,6 +552,7 @@
 				39C64A641EB1F6E90040F338 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
