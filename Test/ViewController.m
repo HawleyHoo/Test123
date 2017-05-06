@@ -137,8 +137,8 @@ __weak NSString *string_weak_ = nil;
         NSString *key = [NSString stringWithCString:sel_getName(name) encoding:NSUTF8StringEncoding];
         NSLog(@" 方法名 %@", key);
     }
-    
-    
+    free(methods);
+    // 注意 运行时没有引用计数，所以没有等价的retain或release方法。如果从带有copy的函数得到一个值，就应调用free。如果用了不到copy单词的函数，千万不要用free();
 }
 
 void loveFunction(id self, SEL _cmd) {
