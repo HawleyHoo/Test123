@@ -14,6 +14,8 @@
 #import "ElfinsArray.h"
 
 #import <objc/runtime.h>
+#include <pthread.h>
+#import <libkern/OSAtomic.h>
 
 __weak NSString *string_weak_assign = nil;
 __weak NSString *string_weak_retain = nil;
@@ -73,7 +75,7 @@ __weak NSString *string_weak_ = nil;
      elfinsArr.count = 3;
      NSArray *elfins = [elfinsArr valueForKey:@"elfins"];
      //elfins为KVC代理数组
-     NSLog(@"%@", elfins);
+//     NSLog(@"%@", elfins);
      
 //     self.associatedObject_assign = [NSString stringWithFormat:@"leichunfeng1"];
 //     self.associatedObject_retain = [NSString stringWithFormat:@"leichunfeng2"];
@@ -101,9 +103,145 @@ __weak NSString *string_weak_ = nil;
 //     }
  
  
-     [self isatest];
- 
- }
+//     [self isatest];
+//     [self runLock];
+     [self dispatchSignal];
+}
+
+- (void)dispatchSignal {
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    // global queue 全局队列是一个并行队列
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+//    dispatch_queue_t queue = dispatch_queue_create("serial", DISPATCH_QUEUE_SERIAL);
+    
+    NSLog(@"begin task 1 %@", [NSThread currentThread]);
+    dispatch_async(queue, ^{
+        NSLog(@"async task 1 %@", [NSThread currentThread]);
+        dispatch_semaphore_signal(semaphore);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"run task 1 %@", [NSThread currentThread]);
+            //            sleep(2);
+            NSLog(@"complete task 1 %@", [NSThread currentThread]);
+        });
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            
+//        });
+    });
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    
+    
+    NSLog(@"wait task 1 %@", [NSThread currentThread]);
+    
+    
+    //任务2
+    dispatch_async(queue, ^{
+        NSLog(@"run task 2");
+        sleep(2);
+        NSLog(@"complete task 2");
+        dispatch_semaphore_signal(semaphore);
+    });
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    NSLog(@"wait task 2");
+    
+    
+    //任务3
+    dispatch_async(queue, ^{
+        NSLog(@"run task 3");
+        sleep(2);
+        NSLog(@"complete task 3");
+        dispatch_semaphore_signal(semaphore);
+    });
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    NSLog(@"wait task 3");
+}
+
+- (void)runLock{
+    CFTimeInterval timeBefore;
+    CFTimeInterval timeCurrent;
+    NSUInteger i;
+    NSUInteger count = 1000*10000;//执行一千万次
+    
+    //@synchronized
+    id obj = [[NSObject alloc] init];;
+    timeBefore = CFAbsoluteTimeGetCurrent();
+    for(i=0; i<count; i++){
+        @synchronized(obj){
+        }
+    }
+    timeCurrent = CFAbsoluteTimeGetCurrent();
+    printf("@synchronized used : %f\n", timeCurrent-timeBefore);
+    
+    //NSLock
+    NSLock *lock = [[NSLock alloc] init];
+    timeBefore = CFAbsoluteTimeGetCurrent();
+    for(i=0; i<count; i++){
+        [lock lock];
+        [lock unlock];
+    }
+    timeCurrent = CFAbsoluteTimeGetCurrent();
+    printf("NSLock used : %f\n", timeCurrent-timeBefore);
+    
+    //NSCondition
+    NSCondition *condition = [[NSCondition alloc] init];
+    timeBefore = CFAbsoluteTimeGetCurrent();
+    for(i=0; i<count; i++){
+        [condition lock];
+        [condition unlock];
+    }
+    timeCurrent = CFAbsoluteTimeGetCurrent();
+    printf("NSCondition used : %f\n", timeCurrent-timeBefore);
+    
+    //NSConditionLock
+    NSConditionLock *conditionLock = [[NSConditionLock alloc] init];
+    timeBefore = CFAbsoluteTimeGetCurrent();
+    for(i=0; i<count; i++){
+        [conditionLock lock];
+        [conditionLock unlock];
+    }
+    timeCurrent = CFAbsoluteTimeGetCurrent();
+    printf("NSConditionLock used : %f\n", timeCurrent-timeBefore);
+    
+    //NSRecursiveLock
+    NSRecursiveLock *recursiveLock = [[NSRecursiveLock alloc] init];
+    timeBefore = CFAbsoluteTimeGetCurrent();
+    for(i=0; i<count; i++){
+        [recursiveLock lock];
+        [recursiveLock unlock];
+    }
+    timeCurrent = CFAbsoluteTimeGetCurrent();
+    printf("NSRecursiveLock used : %f\n", timeCurrent-timeBefore);
+    
+    //pthread_mutex
+    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+    timeBefore = CFAbsoluteTimeGetCurrent();
+    for(i=0; i<count; i++){
+        pthread_mutex_lock(&mutex);
+        pthread_mutex_unlock(&mutex);
+    }
+    timeCurrent = CFAbsoluteTimeGetCurrent();
+    printf("pthread_mutex used : %f\n", timeCurrent-timeBefore);
+    
+    //dispatch_semaphore
+    dispatch_semaphore_t semaphore =dispatch_semaphore_create(1);
+    timeBefore = CFAbsoluteTimeGetCurrent();
+    for(i=0; i<count; i++){
+        dispatch_semaphore_wait(semaphore,DISPATCH_TIME_FOREVER);
+        dispatch_semaphore_signal(semaphore);
+    }
+    timeCurrent = CFAbsoluteTimeGetCurrent();
+    printf("dispatch_semaphore used : %f\n", timeCurrent-timeBefore);
+    
+    //OSSpinLockLock
+    OSSpinLock spinlock = OS_SPINLOCK_INIT;
+    timeBefore = CFAbsoluteTimeGetCurrent();
+    for(i=0; i<count; i++){
+        OSSpinLockLock(&spinlock);
+        OSSpinLockUnlock(&spinlock);
+    }
+    timeCurrent = CFAbsoluteTimeGetCurrent();
+    printf("OSSpinLock used : %f\n", timeCurrent-timeBefore);
+}
 
 - (void)isatest {
     Class newclass = objc_allocateClassPair([UIView class], "HYView", 0);
